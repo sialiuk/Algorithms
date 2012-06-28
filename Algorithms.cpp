@@ -31,11 +31,10 @@ bool CheckSort(FwdIter first, FwdIter last)
 		{
 			break;
 		}
-		else
-			if(*it > *next) 
-			{
-				return false;
-			}
+		else if(*it > *next) 
+		{
+			return false;
+		}
 	}
 	return true;
 }
@@ -43,25 +42,6 @@ bool CheckSort(FwdIter first, FwdIter last)
 int Generate()
 {
 	return (rand() % 10 + 1);
-}
-
-template<typename T>
-void FillContainer(std::vector<T>& vec)
-{
-	T val;
-	while(std::cin >> val)
-		vec.push_back(val);
-	std::cin.clear();
-}
-
-template<typename Iter>
-void PrintContainer(Iter first, Iter last)
-{
-	cout << "Print Container\n";
-	while(first != last)
-	{
-		cout << *first++ << " ";
-	}
 }
 
 //void TestForEach()
@@ -318,6 +298,124 @@ void TestRemoveCopy()
 	}
 }
 
+void TestRaplace()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(5);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.push_back(5);
+
+	replace(v.begin(), v.end(), 5, 10);
+	
+	for(auto it = v.cbegin(); it != v.cend(); ++it)
+	{
+		TEST_CHECK(*it != 5);
+	}
+}
+
+void TestRaplaceCopy()
+{
+	vector<int> v, c;
+	v.push_back(4);
+	v.push_back(5);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.push_back(5);
+
+	replace_copy(v.begin(), v.end(), back_inserter(c), 5, 10);
+	
+	for(auto it =c.cbegin(); it != c.cend(); ++it)
+	{
+		TEST_CHECK(*it != 5);
+	}
+}
+
+void TestRandomShuffle()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(5);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.push_back(5);
+	sort(v.begin(), v.end());
+	TEST_CHECK(CheckSort(v.cbegin(), v.cend()));
+	random_shuffle(v.begin(), v.end());
+	TEST_CHECK(!CheckSort(v.cbegin(), v.cend()));
+}
+
+void TestReverse()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(5);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.push_back(5);
+	sort(v.begin(), v.end());
+	TEST_CHECK(CheckSort(v.cbegin(), v.cend()));
+	reverse(v.begin(), v.end());
+	TEST_CHECK(CheckSort(v.rbegin(), v.rend()));
+}
+
+void TestPartition()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(9);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	auto it = 
+	partition
+	(
+		v.begin(), v.end(), 
+		[](int i)->bool
+		{
+			return i < 5;
+		}
+	);
+	v.erase(it, v.end());
+	
+	for(auto it = v.cbegin(); it != v.cend(); ++it)
+	{
+		TEST_CHECK(*it < 5);
+	}
+}
+
+void TestStablePartition()
+{
+	class Functor
+	{
+	public:
+		bool operator()(int i) { return i > 5; }
+	} func;
+
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(9);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.push_back(6);
+	v.push_back(8);
+	sort(v.begin(), v.end());
+	auto it = stable_partition(v.begin(), v.end(), func);
+	v.erase(it, v.end());
+	
+	TEST_CHECK(CheckSort(v.cbegin(), v.cend()));
+
+	for(auto it = v.cbegin(); it != v.cend(); ++it)
+	{
+		TEST_CHECK(*it > 5);
+	}
+}
 
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -335,7 +433,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	TestRemove();
 	TestRemoveIf();
 	TestRemoveCopy();
-
+	TestRaplace();
+	TestRaplaceCopy();
+	TestRandomShuffle();
+	TestReverse();
+	TestPartition();
+	TestStablePartition();
 
 	return 0;
 }

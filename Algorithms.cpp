@@ -269,7 +269,7 @@ void TestRaplace()
 	}
 }
 
-void TestRaplaceCopy()
+void TestReplaceCopy()
 {
 	vector<int> v, c;
 	v.push_back(4);
@@ -370,6 +370,122 @@ void TestStablePartition()
 	}
 }
 
+void TestUnique()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(4);
+	v.push_back(4);
+	v.push_back(9);
+	v.push_back(9);
+	v.push_back(9);
+	v.push_back(5);
+	v.push_back(4);
+	TEST_CHECK(v.size() == 8);
+	sort(v.begin(), v.end());
+	v.erase(unique(v.begin(), v.end()), v.end());
+	TEST_CHECK(v.size() == 3);
+}
+
+void TestNthElement()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(3);
+	v.push_back(10);
+	v.push_back(8);
+	v.push_back(3);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(2);
+	auto it = v.begin() + 6;
+	
+	nth_element(v.begin(), it, v.end());
+	TEST_CHECK(*it == 8);
+	v.erase(v.begin(), it);
+	
+	it = find_if(v.begin(), v.end(), [](int i)->bool{ return i < 8; });
+	TEST_CHECK(it == v.end());
+}
+
+void TestTransform()
+{
+	vector<int> v, c;
+	v.push_back(4);
+	v.push_back(3);
+	v.push_back(10);
+	v.push_back(8);
+
+	transform(v.begin(), v.end(), back_inserter(c), [](int i)->int { return i * 2; });
+	TEST_CHECK(v.size() == c.size());
+	auto it = find_if(c.begin(), c.end(), [](int i)->bool{ return i < 6; });
+	TEST_CHECK(it == c.end());
+}
+
+void TestSetDifference()
+{
+	vector<int> v, c, r;
+	v.push_back(5);
+	v.push_back(6);
+	v.push_back(3);
+	v.push_back(10);
+	v.push_back(8);
+
+	c.push_back(7);
+	c.push_back(3);
+	c.push_back(10);
+	c.push_back(5);
+	c.push_back(6);
+
+	sort(v.begin(), v.end());
+	sort(c.begin(), c.end());
+	set_difference(v.begin(), v.end(), c.begin(), c.end(), back_inserter(r));
+
+	TEST_CHECK(r[0] == 8);
+}
+
+void TestSetUnion()
+{
+	vector<int> v, c, r;
+	v.push_back(3);
+	v.push_back(4);
+	v.push_back(7);
+	
+	c.push_back(7);
+	c.push_back(1);
+	c.push_back(2);
+	c.push_back(3);
+	c.push_back(4);
+
+	sort(v.begin(), v.end());
+	sort(c.begin(), c.end());
+
+	set_union(v.begin(), v.end(), c.begin(), c.end(), back_inserter(r));
+	TEST_CHECK(CheckSort(r.begin(), r.end()));
+	unique(r.begin(), r.end());
+	TEST_CHECK(r.size() == c.size());
+}
+
+void TestSetIntersection()
+{
+	vector<int> v, c, r;
+	v.push_back(3);
+	v.push_back(4);
+	v.push_back(7);
+	
+	c.push_back(7);
+	c.push_back(1);
+	c.push_back(2);
+	c.push_back(3);
+	c.push_back(4);
+
+	sort(v.begin(), v.end());
+	sort(c.begin(), c.end());
+
+	set_intersection(v.begin(), v.end(), c.begin(), c.end(), back_inserter(r));
+	TEST_CHECK(CheckSort(r.begin(), r.end()));
+	TEST_CHECK(r.size() == v.size());
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {	
@@ -387,11 +503,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	TestRemoveIf();
 	TestRemoveCopy();
 	TestRaplace();
-	TestRaplaceCopy();
+	TestReplaceCopy();
 	TestRandomShuffle();
 	TestReverse();
 	TestPartition();
 	TestStablePartition();
+	TestUnique();
+	TestNthElement();
+	TestTransform();
+	TestSetDifference();
+	TestSetUnion();
+	TestSetIntersection();
 
 	return 0;
 }

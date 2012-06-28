@@ -44,55 +44,8 @@ int Generate()
 	return (rand() % 10 + 1);
 }
 
-//void TestForEach()
-//{
-//	class Functor
-//	{
-//	public:
-//		void operator()(int& i) { i *= 2; }
-//	} func;
-//
-//	std::cout << "Test algorithm for_each\n";
-//	std::vector<int> vec;
-//	std::cout << "Filling Container:\n";
-//	FillContainer(vec);
-//	std::for_each(vec.begin(), vec.end(), func);
-//
-//	PrintContainer(vec.begin(), vec.end(), std::cout);
-//}
-
 void TestFind()
 {
-	//int i;
-
-	//class Functor
-	//{
-	//public:
-	//	bool operator()(int i) { return i > 20; }
-	//} func;
-	////FIND
-	//std::cout << "Test algorithm find\n";
-	//std::vector<int> vec;
-	//std::cout << "Filling Container:\n";
-	//FillContainer(vec);
-	//
-	//std::cout << "Value to search: ";
-	//std::cin >> i;
-
-	//std::vector<int>::iterator iter = std::find(vec.begin(), vec.end(), i);
-	//if(iter != vec.end())
-	//	std::cout << "Value found: " << *iter << std::endl;
-	//else
-	//	std::cout << "Value not found !"<< std::endl;
-
-	////FIND_IF
-	//std::cout << "Test algorithm find_if\n";
-	//iter = find_if(vec.begin(), vec.end(), func);
-	//if(iter != vec.end())
-	//	std::cout << "First element > 20: " <<  *iter << std::endl;
-	//else
-	//	std::cout << "Value not found !"<< std::endl;
-
 	vector<int> v;
 	auto it = find(v.cbegin(), v.cend(), 0);
 	TEST_CHECK(it == v.cend());

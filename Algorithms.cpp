@@ -19,6 +19,7 @@ void Check(bool condition, size_t line)
 
 #define TEST_CHECK(condition) Check(condition, __LINE__);
 
+
 template<typename FwdIter>
 bool CheckSort(FwdIter first, FwdIter last)
 {
@@ -31,8 +32,7 @@ bool CheckSort(FwdIter first, FwdIter last)
 			break;
 		}
 		else
-			if(*it <= *next) ;
-			else
+			if(*it > *next) 
 			{
 				return false;
 			}
@@ -40,6 +40,10 @@ bool CheckSort(FwdIter first, FwdIter last)
 	return true;
 }
 
+int Generate()
+{
+	return (rand() % 10 + 1);
+}
 
 template<typename T>
 void FillContainer(std::vector<T>& vec)
@@ -56,8 +60,7 @@ void PrintContainer(Iter first, Iter last)
 	cout << "Print Container\n";
 	while(first != last)
 	{
-		cout << *first << " ";
-		++first;
+		cout << *first++ << " ";
 	}
 }
 
@@ -253,6 +256,70 @@ void TestBinarySearch()
 
 }
 
+void TestGenerate()
+{
+	vector<int> v(10);
+	generate(v.begin(), v.end(), Generate);
+	for(auto it = v.cbegin(); it != v.cend(); ++it)
+	{
+		TEST_CHECK(*it != 0);
+	}
+}
+
+void TestRemove()
+{
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.erase(remove(v.begin(), v.end(), 5), v.end());
+	
+	for(auto it = v.cbegin(); it != v.cend(); ++it)
+	{
+		TEST_CHECK(*it != 5);
+	}
+}
+
+void TestRemoveIf()
+{
+	class Functor
+	{
+	public:
+		bool operator()(int i) { return i < 5; }
+	} func;
+
+	vector<int> v;
+	v.push_back(4);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.erase(remove_if(v.begin(), v.end(), func), v.end());
+	for(auto it = v.cbegin(); it != v.cend(); ++it)
+	{
+		TEST_CHECK(*it >= 5);
+	}
+}
+
+void TestRemoveCopy()
+{
+	vector<int> v, c;
+	v.push_back(4);
+	v.push_back(5);
+	v.push_back(3);
+	v.push_back(5);
+	v.push_back(7);
+	v.push_back(5);
+	remove_copy(v.begin(), v.end(), back_inserter(c), 5);
+
+	for(auto it = c.cbegin(); it != c.cend(); ++it)
+	{
+		TEST_CHECK(*it != 5);
+	}
+}
+
+
+
 int _tmain(int argc, _TCHAR* argv[])
 {	
 	TestFind();
@@ -264,6 +331,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	TestCopy();
 	TestSort();
 	TestBinarySearch();
+	TestGenerate();
+	TestRemove();
+	TestRemoveIf();
+	TestRemoveCopy();
 
 
 	return 0;
